@@ -22,9 +22,10 @@ public class Person {
      */
 
     // todo: create two private properties named "name" and "gender". Both of these hold Strings.
-
+    private String name;
+    private String gender;
     // todo: create properties named "height", "neck", "waist", and "hips". All of these hold double values that represent measurements in centimeters.
-
+    double height, neck, waist, hips;
     /**
      * Create a constructor that accepts values for name, height, neck, and
      * waist. Because this constructor does not accept an argument for hips, we
@@ -32,7 +33,13 @@ public class Person {
      * to "male".
      */
     // todo: create four-argument constructor for males
-
+    public Person(String name, double height, double neck, double waist){
+        this.gender = "male";
+        this.height = height;
+        this.neck = neck;
+        this.waist = waist;
+        this.name = name;
+    }
 
     /**
      * Create a constructor that accepts values for name, height, neck, waist,
@@ -41,7 +48,14 @@ public class Person {
      * to "female".
      */
     // todo: create five-argument constructor for females
-
+    public Person(String name, double height, double neck, double waist, double hips){
+        this.gender = "female";
+        this.name = name;
+        this.height = height;
+        this.neck = neck;
+        this.waist = waist;
+        this.hips = hips;
+    }
 
     /**
      * Create a method as described here:
@@ -88,7 +102,20 @@ public class Person {
      * <code>495 / (1.29579 - 0.35004 * (Math.log10(87.5 + 91.5 - 42)) + 0.22100 * (Math.log10(165))) - 450</code>;
      */
     // todo: create bodyFatEstimate() method
+    public double bodyFatEstimate(){
 
+        double bodyFat;
+        if(gender == "male"){
+           bodyFat = 495.0 / (1.0324 - 0.19077*(Math.log10(waist - neck)) + 0.15456 * (Math.log10(height))) - 450.0;
+        }
+        else if(gender == "female"){
+            bodyFat = 495.0 / (1.29579 - 0.35004 * (Math.log10(waist + hips - neck)) + 0.22100 * (Math.log10(height))) - 450.0;
+        }
+        else {
+            bodyFat = 0;
+        }
+        return bodyFat;
+    }
 
     /**
      * Create a method as described here:
@@ -106,7 +133,26 @@ public class Person {
      */
     // todo: create inRecommendedRange() method
 
+public boolean inRecommendedRange() {
+    boolean healthyRange;
 
+    if (gender == "male" && bodyFatEstimate() >= 8.0 && bodyFatEstimate() <= 14.0) {
+
+        healthyRange = true;
+    } else {
+        healthyRange = false;
+    }
+    if (gender == "female" && bodyFatEstimate() >= 20.0 && bodyFatEstimate() <= 25.0) {
+
+
+        healthyRange = true;
+
+    } else{
+        healthyRange = false;
+    }
+
+    return healthyRange;
+}
     /**
      * Create a method as described here:
      * <p>
@@ -122,7 +168,20 @@ public class Person {
      * For women, the range is 22 to 25 percent, inclusive.
      */
     // todo: create isAverageAmerican() method
+    public boolean isAverageAmerican(){
+        boolean averageRange = false;
+        if (gender =="male" && bodyFatEstimate() >= 15.0 && bodyFatEstimate() <= 19.0) {
 
+            averageRange = true;
+        }
+        if (gender == "female" && bodyFatEstimate() >= 22.0 && bodyFatEstimate() <= 25.0) {
+
+            averageRange = true;
+
+        }
+
+        return averageRange;
+    }
 
     /**
      * Create a method as described here:
@@ -138,7 +197,20 @@ public class Person {
      * For women, 30% and higher is considered obese.
      */
     // todo: create isObese() method
+    public boolean isObese(){
+        boolean obeseRange  = false;
+        if (this.gender == "male" && bodyFatEstimate() >= 25.0) {
 
+            obeseRange = true;
+        }
+
+        if (this.gender == "female" && bodyFatEstimate() >= 30.0) {
+
+          obeseRange = true;
+
+        }
+       return obeseRange;
+    }
 
     /**
      * Create a toString() method that will return a string description of the
@@ -172,8 +244,24 @@ public class Person {
             Math.round(bodyFatEstimate())
          */
         // todo: create default description.
+    public String toString() {
+        String description = this.name + " is a " + this.gender + " with estimated body fat of " + Math.round(bodyFatEstimate()) + "%.";
 
-
+        if (isObese()) {
+                description = (this.name + " is a " + this.gender + " with estimated body fat of " + Math.round(bodyFatEstimate()) + "%."
+                        +
+                        " This is considered obese.");
+            }
+        if (isAverageAmerican()) {
+                description = (this.name + " is a " + this.gender + " with estimated body fat of " +
+                        Math.round(bodyFatEstimate()) + "%."+" This is in the average range for an american.");
+            }
+        if (isAverageAmerican() && inRecommendedRange()){
+            description = (this.name + " is a " + this.gender + " with estimated body fat of " +
+                    Math.round(bodyFatEstimate()) + "%."+" This is in the recommended range and average range for an american.");
+        }
+        return description;
+    }
         /*
             Next create a conditional statement to add additional details to the
             person's description. This will be a series of if-else-if statements. 
